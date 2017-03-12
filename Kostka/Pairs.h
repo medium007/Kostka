@@ -1,5 +1,10 @@
-#include "Elements.h"
+#ifndef PAIRS_HEADER
+#define PAIRS_HEADER
 
+#include "Elements.h"
+#include "Cross.h"
+
+#define MAX_MOVES_P 11
 
 int YellowPairs[384][5] = {
 		// -------------------
@@ -422,3 +427,216 @@ int YellowPairs[384][5] = {
 		{ R3, U3, B1, B6, L4 },
 		{ R3, U3, B1, L4, B6 }
 };
+
+class Pairs{
+public:
+
+	static void randMoveForPairs(char cube[55], int maxMoves, int pair, int& k, int& move, int& moveP, int vMove[], bool doneMoves[][18]){
+		if (k == maxMoves){
+			k--;
+			Moves::doMoveP(cube, moveP);
+			vMove[k] = -1;
+			moveP = vMove[k - 1];
+			if (Moves::allMovesDone(doneMoves[k])){
+				Moves::prevState(cube, doneMoves, vMove, moveP, k);
+			}
+		}
+		do{
+			move = rand() % 18;
+		} while (doneMoves[k][move] || !Moves::checkMoves(move, moveP));
+		Moves::doMove(cube, move);
+		doneMoves[k][move] = true;
+		vMove[k] = move;
+		moveP = move;
+		k++;
+		if (k < maxMoves){
+			Moves::clearMoves(doneMoves[k], moveP);
+			clearMovesForPairs(doneMoves[k], pair);
+		}
+	}
+
+	static void clearMovesForPairs(bool moves[18], int pair){
+		//clearAllMoves(moves);
+		moves[D] = true;
+		moves[DP] = true;
+		moves[DD] = true;
+
+		switch (pair){
+		case 1:
+			moves[B] = true;
+			moves[BP] = true;
+			moves[BB] = true;
+			break;
+		case 2:
+			moves[R] = true;
+			moves[RP] = true;
+			moves[RR] = true;
+			break;
+		case 3:
+			moves[F] = true;
+			moves[FP] = true;
+			moves[FF] = true;
+			break;
+			/*case 4:
+			moves[L] = true;
+			moves[LP] = true;
+			moves[LL] = true;
+			break;*/
+		};
+
+	}
+
+	static void solveFirstYellowPair(char cube[55]){
+		int vMove[MAX_MOVES_P];
+		bool doneMoves[MAX_MOVES_P][18];
+		int move = -1,
+			moveP = -1;
+		int k = 0;
+
+		for (int i = 0; i < MAX_MOVES_P; i++){
+			vMove[i] = -1;
+			Moves::clearAllMoves(doneMoves[i]);
+			clearMovesForPairs(doneMoves[i], 1);
+		}
+
+		srand(time(NULL));
+
+		while (!(isFirstYellowPair(cube) && Cross::isYellowCrossMade(cube))){
+			randMoveForPairs(cube, MAX_MOVES_P, 1, k, move, moveP, vMove, doneMoves);
+		}
+
+		printf("Zolta para 1: ");
+		Moves::showSolution(vMove, MAX_MOVES_P);
+		printf("\n\n");
+	}
+
+	static bool isFirstYellowPair(char cube[55]){
+		if (cube[12] != 'R')
+			return false;
+		if (cube[23] != 'G')
+			return false;
+		if (cube[15] != 'R')
+			return false;
+		if (cube[26] != 'G')
+			return false;
+		if (cube[29] != 'Y')
+			return false;
+		return true;
+	}
+
+	static void solveSecondYellowPair(char cube[55]){
+		int vMove[MAX_MOVES_P];
+		bool doneMoves[MAX_MOVES_P][18];
+		int move = -1,
+			moveP = -1;
+		int k = 0;
+
+		for (int i = 0; i < MAX_MOVES_P; i++){
+			vMove[i] = -1;
+			Moves::clearAllMoves(doneMoves[i]);
+			clearMovesForPairs(doneMoves[i], 2);
+		}
+
+		srand(time(NULL));
+
+		while (!(isSecondYellowPair(cube) && isFirstYellowPair(cube) && Cross::isYellowCrossMade(cube))){
+			randMoveForPairs(cube, MAX_MOVES_P, 2, k, move, moveP, vMove, doneMoves);
+		}
+
+		printf("Zolta para 2: ");
+		Moves::showSolution(vMove, MAX_MOVES_P);
+		printf("\n\n");
+	}
+
+	static bool isSecondYellowPair(char cube[55]){
+		if (cube[21] != 'G')
+			return false;
+		if (cube[24] != 'G')
+			return false;
+		if (cube[27] != 'Y')
+			return false;
+		if (cube[41] != 'O')
+			return false;
+		if (cube[44] != 'O')
+			return false;
+		return true;
+	}
+
+	static void solveThirdYellowPair(char cube[55]){
+		int vMove[MAX_MOVES_P];
+		bool doneMoves[MAX_MOVES_P][18];
+		int move = -1,
+			moveP = -1;
+		int k = 0;
+
+		for (int i = 0; i < MAX_MOVES_P; i++){
+			vMove[i] = -1;
+			Moves::clearAllMoves(doneMoves[i]);
+			clearMovesForPairs(doneMoves[i], 3);
+		}
+
+		srand(time(NULL));
+
+		while (!(isThirdYellowPair(cube) && isSecondYellowPair(cube) && isFirstYellowPair(cube) && Cross::isYellowCrossMade(cube))){
+			randMoveForPairs(cube, MAX_MOVES_P, 3, k, move, moveP, vMove, doneMoves);
+		}
+
+		printf("Zolta para 3: ");
+		Moves::showSolution(vMove, MAX_MOVES_P);
+		printf("\n\n");
+	}
+
+	static bool isThirdYellowPair(char cube[55]){
+		if (cube[D7] != 'Y')
+			return false;
+		if (cube[L7] != 'O')
+			return false;
+		if (cube[B9] != 'B')
+			return false;
+		if (cube[B6] != 'B')
+			return false;
+		if (cube[L4] != 'O')
+			return false;
+		return true;
+	}
+
+	static void solveFourthYellowPair(char cube[55]){
+		int vMove[MAX_MOVES_P];
+		bool doneMoves[MAX_MOVES_P][18];
+		int move = -1,
+			moveP = -1;
+		int k = 0;
+
+		for (int i = 0; i < MAX_MOVES_P; i++){
+			vMove[i] = -1;
+			Moves::clearAllMoves(doneMoves[i]);
+			clearMovesForPairs(doneMoves[i], 4);
+		}
+
+		srand(time(NULL));
+
+		while (!(isFourthYellowPair(cube) && isThirdYellowPair(cube) && isSecondYellowPair(cube) && isFirstYellowPair(cube) && Cross::isYellowCrossMade(cube))){
+			randMoveForPairs(cube, MAX_MOVES_P, 4, k, move, moveP, vMove, doneMoves);
+		}
+
+		printf("Zolta para 4: ");
+		Moves::showSolution(vMove, MAX_MOVES_P);
+		printf("\n\n");
+	}
+
+	static bool isFourthYellowPair(char cube[55]){
+		if (cube[D9] != 'Y')
+			return false;
+		if (cube[R9] != 'R')
+			return false;
+		if (cube[B7] != 'B')
+			return false;
+		if (cube[B4] != 'B')
+			return false;
+		if (cube[R6] != 'R')
+			return false;
+		return true;
+	}
+};
+
+#endif
