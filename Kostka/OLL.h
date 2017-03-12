@@ -1,5 +1,12 @@
+#ifndef OLL_HEADER
+#define OLL_HEADER
+
+#include<iostream>
+
 #include "Elements.h"
 #include "Moves.h"
+
+using namespace std;
 
 int OLLs[58][8]{
 		//--------- KRZYZ -------------------
@@ -148,3 +155,49 @@ int solveOLL[58][16]{
 		{ R, U, RP, UP, L, RP, F, R, FP, LP, -1 },
 		{ L, F, RP, FP, LP, R, U, R, UP, RP, -1 },
 };
+
+class OLL{
+public:
+	static void doOLL(char cube[55]){
+		int oll = getOLL(cube);
+		int uMoves = 0;
+		while (oll == -1){
+			uMoves++;
+			Moves::doMove(cube, U);
+			oll = getOLL(cube);
+			cout << oll << endl;
+		}
+		printf("Orientacja: ");
+		if (uMoves == 1)
+			printf("U ");
+		else if (uMoves == 2)
+			printf("U2 ");
+		else if (uMoves == 3)
+			printf("U' ");
+		int i = 0;
+		while (solveOLL[oll][i] != -1){
+			Moves::doMove(cube, solveOLL[oll][i]);
+			Moves::showMove(solveOLL[oll][i]);
+			i++;
+		}
+		printf("\n\n");
+	}
+
+	static int getOLL(char cube[55]){
+		for (int i = 0; i < 58; i++){
+			if (checkOLL(cube, OLLs[i]))
+				return i;
+		}
+		return -1;
+	}
+
+	static bool checkOLL(char cube[55], int oll[8]){
+		for (int i = 0; i < 8; i++){
+			if (cube[oll[i]] != 'W')
+				return false;
+		}
+		return true;
+	}
+};
+
+#endif

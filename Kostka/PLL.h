@@ -1,3 +1,6 @@
+#ifndef PLL_HEADER
+#define PLL_HEADER
+
 #include "Elements.h"
 #include "Moves.h"
 
@@ -76,3 +79,76 @@ int solvePLL[22][18]{
 		//-------------PERM Z------------------------------
 		{ RP, UP, RR, U, R, U, RP, UP, R, U, R, UP, R, UP, RP, -1},
 };
+
+class PLL{
+public:
+	static void doPLL(char cube[55]){
+		int pll = getPLL(cube);
+		int uMoves = 0;
+		while (pll == -1){
+			uMoves++;
+			Moves::doMove(cube, U);
+			pll = getPLL(cube);
+		}
+		printf("Permutacja: ");
+		if (uMoves == 1)
+			printf("U ");
+		else if (uMoves == 2)
+			printf("U2 ");
+		else if (uMoves == 3)
+			printf("U' ");
+		int i = 0;
+		while (solvePLL[pll][i] != -1){
+			Moves::doMove(cube, solvePLL[pll][i]);
+			Moves::showMove(solvePLL[pll][i]);
+			i++;
+		}
+		if (cube[F2] == 'O'){
+			Moves::doMove(cube, U);
+			printf("U ");
+		}
+		else if (cube[F2] == 'B'){
+			Moves::doMove(cube, UU);
+			printf("U2 ");
+		}
+		else if (cube[F2] == 'R'){
+			Moves::doMove(cube, UP);
+			printf("U' ");
+		}
+		printf("\n");
+	}
+
+	static int getPLL(char cube[55]){
+		for (int i = 0; i < 22; i++){
+			if (checkPLL(cube, PLLs[i]))
+				return i;
+		}
+		return -1;
+	}
+
+	static bool checkPLL(char cube[55], int pll[12]){
+		char tmp[4] = { 'R', 'G', 'O', 'B' };
+		bool a = false;
+		for (int i = 0; i < 4; i++){
+			for (int j = 0; j < 12; j++){
+				if (cube[pll[j]] != tmp[j / 3]){
+					a = false;
+					break;
+				}
+				a = true;
+			}
+			if (a)
+				return a;
+			else {
+				char c = tmp[0];
+				tmp[0] = tmp[1];
+				tmp[1] = tmp[2];
+				tmp[2] = tmp[3];
+				tmp[3] = c;
+			}
+		}
+		return false;
+	}
+};
+
+#endif
