@@ -50,7 +50,7 @@ int solvePLL[22][18]{
 		//-------------PERM E------------------------------
 		{ R, BP, RP, F, R, B, RP, FP, R, B, RP, F, R, BP, RP, FP, -1 },
 		//-------------PERM F------------------------------
-		{ R1, L2, B3, F1, F2, F3, B1, R2, L3, L1, B2, R3 },
+		{ RP, U, R, UP, RR, FP, UP, F, U, R, F, RP, FP, RR, UP, -1 },
 		//-------------PERM G------------------------------
 		{ FP, UP, F, RR, D, BP, U, B, UP, B, DP, RR, -1 },
 		{ R, U, RP, F2, DP, L, UP, LP, U, LP, D, FF, -1 },

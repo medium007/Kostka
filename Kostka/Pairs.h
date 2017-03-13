@@ -6,6 +6,146 @@
 
 #define MAX_MOVES_P 11
 
+int firstPairs[60][5] = {
+		{ D3, F9, R7, F6, R4 }, //
+		{ D3, F9, R7, R4, F6 }, // R'FRF' RU'R'URU'R'U2RU'R'
+		{ D3, F9, R7, U6, R2 }, // U' F' U F U R U' R'
+		{ D3, F9, R7, R2, U6 }, // U2 R U' R' U' F' U F
+		{ D3, F9, R7, U2, B2 },  // F' U F U R U' R'
+		{ D3, F9, R7, B2, U2 }, // U' R U' R' U' F' U F
+		{ D3, F9, R7, U4, L2 }, // U F' U F U R U' R'
+		{ D3, F9, R7, L2, U4 }, // R U' R' U' F' U F
+		{ D3, F9, R7, U8, F2 },  //U2 F' U F U R U' R'
+		{ D3, F9, R7, F2, U8 }, // U R U' R' U' F' U F
+
+		{ F9, R7, D3, F6, R4 }, // F' U' F U2 F' U F U' F' U' F
+		{ F9, R7, D3, R4, F6 }, // F' U' F U  F' U F U2 R U R'
+		{ F9, R7, D3, U6, R2 }, // R U' R' U R U' R'
+		{ F9, R7, D3, R2, U6 }, // U F' U' F U F' U' L
+		{ F9, R7, D3, U2, B2 }, // U R U' R' U R U' R'
+		{ F9, R7, D3, B2, U2 }, //U2 F' U' F U F' U' L
+		{ F9, R7, D3, U4, L2 }, //U2 R U' R' U R U' R'
+		{ F9, R7, D3, L2, U4 }, // U' F' U' F U F' U' L
+		{ F9, R7, D3, U8, F2 }, // U' R U' R' U R U' R'
+		{ F9, R7, D3, F2, U8 }, // F' U' F U F' U' L
+
+
+		{ R7, D3, F9, F6, R4 }, //R U R' U2 R U' R' U R U R'
+		{ R7, D3, F9, R4, F6 }, // R U R' U'  R U' R' U2 F' U' F
+		{ R7, D3, F9, U6, R2 }, // RU R' U' R U R'
+		{ R7, D3, F9, R2, U6 }, // U F' U F U' F' U F
+		{ R7, D3, F9, U2, B2 }, //URU R' U' R U R'
+		{ R7, D3, F9, B2, U2 }, // U2 F' U F U' F' U F
+		{ R7, D3, F9, U4, L2 },// U2 RU R' U' R U R'
+		{ R7, D3, F9, L2, U4 },// U' F' U F U' F' U F
+		{ R7, D3, F9, U8, F2 },// U' RU R' U' R U R'
+		{ R7, D3, F9, F2, U8 },// F' U F U' F' U F
+
+		//-------------------------
+		{ U9, R1, F3, F6, R4 },
+		{ U9, R1, F3, R4, F6 },
+		{ U9, R1, F3, U6, R2 },
+		{ U9, R1, F3, R2, U6 },
+		{ U9, R1, F3, U2, B2 },
+		{ U9, R1, F3, B2, U2 },
+		{ U9, R1, F3, U4, L2 },
+		{ U9, R1, F3, L2, U4 },
+		{ U9, R1, F3, U8, F2 },
+		{ U9, R1, F3, F2, U8 },
+
+		{ R1, F3, U9, F6, R4 },
+		{ R1, F3, U9, R4, F6 },
+		{ R1, F3, U9, U6, R2 },
+		{ R1, F3, U9, R2, U6 },
+		{ R1, F3, U9, U2, B2 },
+		{ R1, F3, U9, B2, U2 },
+		{ R1, F3, U9, U4, L2 },
+		{ R1, F3, U9, L2, U4 },
+		{ R1, F3, U9, U8, F2 },
+		{ R1, F3, U9, F2, U8 },
+
+		{ F3, U9, R1, F6, R4 },
+		{ F3, U9, R1, R4, F6 },
+		{ F3, U9, R1, U6, R2 },
+		{ F3, U9, R1, R2, U6 },
+		{ F3, U9, R1, U2, B2 },
+		{ F3, U9, R1, B2, U2 },
+		{ F3, U9, R1, U4, L2 },
+		{ F3, U9, R1, L2, U4 },
+		{ F3, U9, R1, U8, F2 },
+		{ F3, U9, R1, F2, U8 }
+};
+
+int solveFirstPair[60][16] = {
+		{-1}, //
+		{ RP, F, R, FP, R, UP, RP, U, R, UP, RP, UU, R, UP, RP, -1 }, // R'FRF' RU'R'URU'R'U2RU'R'
+		{ UP, FP, UP, F, U, R, U, RP, -1 }, // U' F' U F U R U' R'
+		{ UU, R, U, RP, UP, FP, U, F, -1 }, // U2 R U' R' U' F' U F
+		{ FP, U, F, U, R, UP, RP, -1 },  // F' U F U R U' R'
+		{ UP, R, UP, RP, UP, FP, U, F, -1 }, // U' R U' R' U' F' U F
+		{ U, FP, U, F, U, R, UP, RP, -1 }, // U F' U F U R U' R'
+		{ R, UP, RP, UP, FP, U, F, -1 }, // R U' R' U' F' U F
+		{ UU, FP, U, F, U, R, UP, RP, - 1 },  //U2 F' U F U R U' R'
+		{ U, R, UP, RP, UP, FP, U, F, -1 }, // U R U' R' U' F' U F
+
+		{ FP, UP, F, UU, FP, U, F, UP, FP, UP, F, -1 }, // F' U' F U2 F' U F U' F' U' F
+		{ FP, UP, F, U, FP, U, F, UU, R, U, RP, -1 }, // F' U' F U  F' U F U2 R U R'
+		{ R, UP, RP, U, R, UP, RP, -1 }, // R U' R' U R U' R'
+		{ U, FP, UP, F, U, FP, UP, L, -1 }, // U F' U' F U F' U' L
+		{ U, R, UP, RP, U, R, UP, UP, -1 }, // U R U' R' U R U' R'
+		{ UU, FP, UP, F, U, FP, UP, L, -1 }, //U2 F' U' F U F' U' L
+		{ UU, R, UP, RP, U, R, UP, RP, -1}, //U2 R U' R' U R U' R'
+		{ UP, FP, UP, F, U, FP, UP, L, -1 }, // U' F' U' F U F' U' L
+		{ UP, R, UP, RP, U, R, UP, RP, -1 }, // U' R U' R' U R U' R'
+		{ FP, UP, F, U, FP, UP, L, -1 }, // F' U' F U F' U' L
+
+
+		{ R, U, RP, UU, R, UP, RP, U, R, U, RP, -1 }, //R U R' U2 R U' R' U R U R'
+		{ R, U, RP, UP, R, UP, RP, UU, FP, UP, F, -1 }, // R U R' U'  R U' R' U2 F' U' F
+		{ R, U, RP, UP, R, U, RP, -1 }, // RU R' U' R U R'
+		{ U, FP, U, F, UP, FP, U, F, -1 }, // U F' U F U' F' U F
+		{ U, R, U, RP, UP, R, U, RP, -1 }, //URU R' U' R U R'
+		{ UU, FP, U, F, UP, FP, U, F, -1 }, // U2 F' U F U' F' U F
+		{ UU, R, U, RP, UP, R, U, RP, -1 },// U2 RU R' U' R U R'
+		{ UP, FP, U, F, UP, FP, U, F, -1 },// U' F' U F U' F' U F
+		{ UP, R, U, RP, UP, R, U, RP, -1 },// U' RU R' U' R U R'
+		{ FP, U, F, UP, FP, U, F, -1 },// F' U F U' F' U F
+
+		//-------------------------
+		{ R, U, RP, UU, R,  UU, RP, UU, R, U, RP, -1 },
+		{ R, UP, RP, U, FP, U, F, -1 },
+		{ R, UU, RP, UP, R, U, RP, -1 },
+		{ R, UU, RP, FP, UU, F, UU, FP, U, F, -1 },
+		{ FP, U, F, U, R, UU, RP, UU, R, UP, RP, -1},
+		{ FP, U, F, UU, FP, UP, F, -1},
+		{ R, UP, RP, UU, R, U, RP, -1 },
+		{ R, UP, RP, UP, FP, UU, F, UU, FP, U, F, -1 },
+		{ FP, U, F, U, R, U, RP, UU, R, UP, RP, -1 },
+		{ FP, UU, F, U, FP, UP, F, -1 },
+
+		{ U, R, U, RP, UU, R, U, RP, -1 },
+		{ UU, FP, U, F, U, R, U, RP, -1 },
+		{ UP, R, UP, RP, U, R, U, RP, -1 },
+		{ R, UP, RP, UU, FP, UP, F, -1 },
+		{ R, U, RP, -1 },
+		{ U, FP, UU, F, UU, FP, U, F, -1 },
+		{ U, FP, U, F, UP, R, U, RP, -1 },
+		{ U, FP, UP, F, UU, FP, U, F, -1 },
+		{ U, FP, UU, F, UP, R, U, RP, -1 },
+		{ UP, FP, U, F, -1 },
+
+		{ UP, FP, UP, F, UU, FP, UP, F, -1 },
+		{ UU, R, UP, RP, UP, FP, UP, F },
+		{ U, R, UP, RP, -1 },
+		{ UP, R, U2,RP, U, FP, UP, F, -1 },
+		{ UP, R, U, RP, UU, R, UP, RP, -1 },
+		{ UP, R, UP, RP, U, FP, UP, F, -1 },
+		{ UP, R, UU, RP, UU, R, UP, RP, -1 },
+		{ FP, UP, F, -1 },
+		{ FP, U, F, UU, R, U, RP, -1 },
+		{ U, FP, U, F, UP, FP, UP, F, -1 }
+};
+
 int YellowPairs[384][5] = {
 		// -------------------
 		//      FR
@@ -431,6 +571,39 @@ int YellowPairs[384][5] = {
 class Pairs{
 public:
 
+	static void doPair(char cube[55]){
+		int pair = getPair(cube);
+		int i = 0;
+		while (solveFirstPair[pair][i] != -1){
+			Moves::doMove(cube, solveFirstPair[pair][i]);
+			Moves::showMove(solveFirstPair[pair][i]);
+			i++;
+		}
+		printf("\n\n");
+	}
+
+	static int getPair(char cube[55]){
+		for (int i = 0; i < 60; i++){
+			if (checkPair(cube, firstPairs[i]))
+				return i;
+		}
+		return -1;
+	}
+
+	static bool checkPair(char cube[55],int pair[5]){
+		if (cube[pair[0]] != 'Y')
+			return false;
+		if (cube[pair[1]] != 'G')
+			return false;
+		if (cube[pair[2]] != 'R')
+			return false;
+		if (cube[pair[3]] != 'G')
+			return false;
+		if (cube[pair[4]] != 'R')
+			return false;
+		return true;
+	}
+
 	static void randMoveForPairs(char cube[55], int maxMoves, int pair, int& k, int& move, int& moveP, int vMove[], bool doneMoves[][18]){
 		if (k == maxMoves){
 			k--;
@@ -477,17 +650,22 @@ public:
 			moves[FP] = true;
 			moves[FF] = true;
 			break;
-			/*case 4:
+		case 4:
 			moves[L] = true;
 			moves[LP] = true;
 			moves[LL] = true;
-			break;*/
+			break;
 		};
 
 	}
 
 	static void solveFirstYellowPair(char cube[55]){
-		int vMove[MAX_MOVES_P];
+		system("Pause");
+		printf("Zolta para 1: ");
+		doPair(cube);
+		system("Pause");
+
+		/*int vMove[MAX_MOVES_P];
 		bool doneMoves[MAX_MOVES_P][18];
 		int move = -1,
 			moveP = -1;
@@ -507,7 +685,7 @@ public:
 
 		printf("Zolta para 1: ");
 		Moves::showSolution(vMove, MAX_MOVES_P);
-		printf("\n\n");
+		printf("\n\n");*/
 	}
 
 	static bool isFirstYellowPair(char cube[55]){
@@ -539,7 +717,7 @@ public:
 
 		srand(time(NULL));
 
-		while (!(isSecondYellowPair(cube) && isFirstYellowPair(cube) && Cross::isYellowCrossMade(cube))){
+		while (!(isSecondYellowPair(cube) && Cross::isYellowCrossMade(cube))){
 			randMoveForPairs(cube, MAX_MOVES_P, 2, k, move, moveP, vMove, doneMoves);
 		}
 
@@ -577,7 +755,7 @@ public:
 
 		srand(time(NULL));
 
-		while (!(isThirdYellowPair(cube) && isSecondYellowPair(cube) && isFirstYellowPair(cube) && Cross::isYellowCrossMade(cube))){
+		while (!(isThirdYellowPair(cube) && isSecondYellowPair(cube) && Cross::isYellowCrossMade(cube))){
 			randMoveForPairs(cube, MAX_MOVES_P, 3, k, move, moveP, vMove, doneMoves);
 		}
 
@@ -615,7 +793,7 @@ public:
 
 		srand(time(NULL));
 
-		while (!(isFourthYellowPair(cube) && isThirdYellowPair(cube) && isSecondYellowPair(cube) && isFirstYellowPair(cube) && Cross::isYellowCrossMade(cube))){
+		while (!(isFourthYellowPair(cube) && isThirdYellowPair(cube) && isSecondYellowPair(cube) && Cross::isYellowCrossMade(cube))){
 			randMoveForPairs(cube, MAX_MOVES_P, 4, k, move, moveP, vMove, doneMoves);
 		}
 

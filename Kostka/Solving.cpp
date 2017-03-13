@@ -44,15 +44,16 @@ int main()
 	scrambleCube(cube);
 	drawCube(cube);
 	cross.solveYellowCross(cube);
-	/*
-	solveFirstYellowPair(cube);
-	solveSecondYellowPair(cube);
-	solveThirdYellowPair(cube);
-	solveFourthYellowPair(cube);
-	doOLL(cube);
-	doPLL(cube);
+	
+	Pairs::solveSecondYellowPair(cube);
+	Pairs::solveThirdYellowPair(cube);
+	Pairs::solveFourthYellowPair(cube);
+	Pairs::solveFirstYellowPair(cube);
+
+	OLL::doOLL(cube);
+	PLL::doPLL(cube);
 	printf("\n\n");
-	drawCube(cube);*/
+	drawCube(cube);
 
 	/*solveWhiteCross(cube);
 
